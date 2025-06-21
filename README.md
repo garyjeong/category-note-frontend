@@ -6,6 +6,7 @@ YouTube와 지식 웹 페이지를 정리하는 프론트엔드 애플리케이�
 
 - [주요 기능](#주요-기능)
 - [기술 스택](#기술-스택)
+- [개발 규칙](#개발-규칙)
 - [프로젝트 구조](#프로젝트-구조)
 - [설치 및 실행](#설치-및-실행)
 - [테스트](#테스트)
@@ -55,6 +56,93 @@ YouTube와 지식 웹 페이지를 정리하는 프론트엔드 애플리케이�
 - **ESLint 9** - 코드 품질 관리 (최신 버전)
 - **PostCSS** - CSS 후처리
 - **Tailwind CSS IntelliSense** - 개발 도구
+
+## 📏 **개발 규칙**
+
+Category Note 프로젝트는 **직관적 명칭**과 **OOP 설계 원칙**을 기반으로 개발됩니다. 자세한 내용은 **[RULE.md](./RULE.md)**를 참조하세요.
+
+### **핵심 원칙**
+
+#### **1. 직관적 명칭 (Intuitive Naming)**
+- ✅ **목적이 명확한 이름**: `createNewBookmarkNote()` vs `create()`
+- ✅ **동사 + 명사 조합**: `fetchUserBookmarkList()`, `validateEmailAddress()`
+- ✅ **축약어 금지**: `BookmarkApiClient` vs `ApiClient`
+- ✅ **한국어 주석**: `// 북마크 목록을 조회합니다`
+
+#### **2. OOP 설계 원칙**
+- ✅ **단일 책임 원칙**: 하나의 클래스는 하나의 책임
+- ✅ **의존성 주입**: 추상화에 의존, 구체화에 의존하지 않음
+- ✅ **인터페이스 분리**: API 클라이언트와 상태 관리 분리
+- ✅ **확장 가능한 설계**: 컴포넌트와 훅 기반 구조
+
+### **예시 코드 스타일**
+
+#### **API 클라이언트 (TypeScript)**
+```typescript
+class BookmarkApiClient {
+    /**
+     * 북마크 관련 API 통신을 담당하는 클라이언트
+     */
+    public async createNewBookmarkNote(bookmarkData: BookmarkCreateRequest): Promise<BookmarkNote> {
+        // API 호출 로직
+    }
+    
+    public async fetchUserBookmarkList(userId: number): Promise<BookmarkNote[]> {
+        // API 호출 로직
+    }
+}
+```
+
+#### **상태 관리 (Zustand)**
+```typescript
+interface BookmarkStoreState {
+  bookmarkList: BookmarkNote[]
+  currentBookmark: BookmarkNote | null
+  isLoadingBookmarks: boolean
+  bookmarkCreationError: string | null
+}
+
+interface BookmarkStoreActions {
+  createNewBookmark: (data: BookmarkCreateData) => Promise<void>
+  fetchUserBookmarks: (userId: number) => Promise<void>
+  updateBookmarkContent: (id: number, content: string) => Promise<void>
+  deleteBookmarkNote: (id: number) => Promise<void>
+}
+```
+
+#### **컴포넌트 설계 (React)**
+```typescript
+interface BookmarkFormComponentProps {
+  onBookmarkCreate: (bookmark: BookmarkNote) => void
+  initialData?: BookmarkNote
+}
+
+function BookmarkFormComponent({ onBookmarkCreate, initialData }: BookmarkFormComponentProps) {
+    /**
+     * 북마크 생성/수정 폼 컴포넌트
+     */
+    const handleFormSubmission = async (formData: BookmarkFormData): Promise<void> => {
+        // 폼 제출 처리 로직
+    }
+    
+    const validateBookmarkData = (data: BookmarkFormData): ValidationResult => {
+        // 폼 데이터 검증 로직
+    }
+    
+    return (
+        // JSX 반환
+    )
+}
+```
+
+### **체크리스트**
+- [ ] **컴포넌트명**이 역할을 명확히 표현하는가?
+- [ ] **함수명**이 수행하는 액션을 정확히 설명하는가?
+- [ ] **변수명**이 저장하는 데이터의 의미를 명확히 전달하는가?
+- [ ] **한국어 주석**으로 의도를 명확히 설명했는가?
+- [ ] **OOP 원칙**을 준수하여 확장 가능한 구조로 설계했는가?
+
+> **📖 자세한 규칙**: [RULE.md](./RULE.md)에서 전체 개발 가이드라인을 확인하세요.
 
 ## 📁 프로젝트 구조
 
